@@ -1,8 +1,9 @@
 push = require 'push'
 Class = require 'class'
 
-require 'bird'
-require 'pipe'
+require 'Bird'
+require 'Pipe'
+require 'PipePairs'
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
@@ -27,6 +28,8 @@ local BIRD_JUMP_DY = -200
 local pipes = {}
 local pipeSpawnTimer = 0
 local PIPE_SPAWN_TIME = 2
+
+local lastY = VIRTUAL_HEIGHT / 2 + math.random(-20, 20)
 
 function love.load()
 
@@ -77,8 +80,12 @@ function love.update(dt)
 
     if pipeSpawnTimer > PIPE_SPAWN_TIME then
         pipeSpawnTimer = 0
-        table.insert(pipes, Pipe())
-        print('Added new pipe')
+
+        local y = lastY + math.random(-30, 30)
+        y = math.min(y, VIRTUAL_HEIGHT - 48)
+        y = math.max(y, PIPE_GAP_HEIGHT + 48)
+        lastY = y
+        table.insert(pipes, PipePairs(y))
     end
 
     bird:update(dt)
@@ -86,7 +93,7 @@ function love.update(dt)
     for k, v in pairs(pipes) do
         v:update(dt)
 
-        if v.x < -v.width then
+        if v.x < -PIPE_WIDTH then
             table.remove(pipes, k)
         end
     end

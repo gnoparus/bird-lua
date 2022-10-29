@@ -1,8 +1,8 @@
-PipePairs = Class {}
+PipePair = Class {}
 
 PIPE_GAP_HEIGHT = 90
 
-function PipePairs:init(y)
+function PipePair:init(y)
 
     self.x = VIRTUAL_WIDTH + 32
     self.y = y
@@ -15,7 +15,7 @@ function PipePairs:init(y)
     self.remove = false
 end
 
-function PipePairs:update(dt)
+function PipePair:update(dt)
 
     if self.x > -PIPE_WIDTH then
         self.x = self.x - PIPE_SCROLL_DX * dt
@@ -27,7 +27,7 @@ function PipePairs:update(dt)
     end
 end
 
-function PipePairs:render()
+function PipePair:render()
     for k, v in pairs(self.pipes) do
         v:render()
     end

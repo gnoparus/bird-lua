@@ -69,7 +69,7 @@ function PlayState:update(dt)
 
     end
 
-    if self.bird.y > VIRTUAL_HEIGHT then
+    if self.bird.y > VIRTUAL_HEIGHT or self.bird.y < -128 then
         gStateMachine:change('score', {
             score = self.score
         })

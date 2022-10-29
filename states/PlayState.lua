@@ -41,6 +41,8 @@ function PlayState:update(dt)
             if pair.x + PIPE_WIDTH < self.bird.x then
                 self.score = self.score + 1
                 pair.scored = true
+                sounds['score']:play()
+
             end
         end
         pair:update(dt)
@@ -60,6 +62,8 @@ function PlayState:update(dt)
                 gStateMachine:change('score', {
                     score = self.score
                 })
+                sounds['explosion']:play()
+                sounds['hurt']:play()
             end
         end
 
@@ -69,6 +73,8 @@ function PlayState:update(dt)
         gStateMachine:change('score', {
             score = self.score
         })
+        sounds['explosion']:play()
+        sounds['hurt']:play()
     end
 
 end

@@ -3,7 +3,7 @@ Class = require 'class'
 
 require 'Bird'
 require 'Pipe'
-require 'PipePairs'
+require 'PipePair'
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
@@ -25,11 +25,13 @@ local BACKGROUND_LOOPING_POING = 413
 local bird = Bird()
 local BIRD_JUMP_DY = -200
 
-local pipes = {}
+local pipePairs = {}
 local pipeSpawnTimer = 0
 local PIPE_SPAWN_TIME = 2
 
 local lastY = VIRTUAL_HEIGHT / 2 + math.random(-20, 20)
+
+local scrolling = true
 
 function love.load()
 
@@ -69,32 +71,45 @@ function love.keyboard.wasPressed(key)
 end
 
 function love.update(dt)
-    backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POING
-    groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
+    if scrolling then
+        backgroundScroll = (backgroundScroll + BACKGROUND_SCROLL_SPEED * dt) % BACKGROUND_LOOPING_POING
+        groundScroll = (groundScroll + GROUND_SCROLL_SPEED * dt) % VIRTUAL_WIDTH
 
-    if love.keyboard.wasPressed('space') then
-        bird.dy = BIRD_JUMP_DY
-    end
+        if love.keyboard.wasPressed('space') then
+            bird.dy = BIRD_JUMP_DY
+        end
 
-    pipeSpawnTimer = pipeSpawnTimer + dt
+        pipeSpawnTimer = pipeSpawnTimer + dt
 
-    if pipeSpawnTimer > PIPE_SPAWN_TIME then
-        pipeSpawnTimer = 0
+        if pipeSpawnTimer > PIPE_SPAWN_TIME then
+            pipeSpawnTimer = 0
 
-        local y = lastY + math.random(-30, 30)
-        y = math.min(y, VIRTUAL_HEIGHT - 48)
-        y = math.max(y, PIPE_GAP_HEIGHT + 48)
-        lastY = y
-        table.insert(pipes, PipePairs(y))
-    end
+            local y = lastY + math.random(-30, 30)
+            y = math.min(y, VIRTUAL_HEIGHT - 48)
+            y = math.max(y, PIPE_GAP_HEIGHT + 48)
+            lastY = y
+            table.insert(pipePairs, PipePair(y))
+        end
 
-    bird:update(dt)
+        bird:update(dt)
 
-    for k, v in pairs(pipes) do
-        v:update(dt)
+        for k, pair in pairs(pipePairs) do
+            pair:update(dt)
 
-        if v.x < -PIPE_WIDTH then
-            table.remove(pipes, k)
+            for l, pipe in pairs(pair.pipes) do
+                if bird:collides(pipe) then
+                    scrolling = false
+                end
+            end
+
+            if pair.x < -PIPE_WIDTH then
+                pair.remove = true
+            end
+        end
+        for k, pair in pairs(pipePairs) do
+            if pair.remove then
+                table.remove(pipePairs, k)
+            end
         end
     end
 
@@ -106,8 +121,8 @@ function love.draw()
 
     love.graphics.draw(background, -backgroundScroll, 0)
 
-    for k, v in pairs(pipes) do
-        v:render()
+    for k, pair in pairs(pipePairs) do
+        pair:render()
     end
 
     love.graphics.draw(ground, -groundScroll, VIRTUAL_HEIGHT - 16)

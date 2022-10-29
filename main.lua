@@ -43,6 +43,8 @@ function love.load()
 
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
+    math.randomseed(os.time())
+
     love.window.setTitle('Bird Lua')
 
     smallFont = love.graphics.newFont('font.ttf', 8)

@@ -1,6 +1,6 @@
 PipePair = Class {}
 
-PIPE_GAP_HEIGHT = 90
+PIPE_GAP_HEIGHT = 84
 
 function PipePair:init(y)
 
@@ -8,7 +8,7 @@ function PipePair:init(y)
     self.y = y
 
     self.pipes = {
-        ['upper'] = Pipe('top', self.y - PIPE_GAP_HEIGHT + math.random(-2, 6)),
+        ['upper'] = Pipe('top', self.y - PIPE_GAP_HEIGHT + math.random(-3, 10)),
         ['lower'] = Pipe('bottom', self.y)
     }
 

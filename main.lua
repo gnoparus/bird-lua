@@ -88,6 +88,7 @@ function love.load()
     gStateMachine:change('title')
 
     love.keyboard.keysPressed = {}
+    love.mouse.buttonPressed = {}
 end
 
 function love.resize(w, h)
@@ -95,13 +96,18 @@ function love.resize(w, h)
 end
 
 function love.keypressed(key)
-
     love.keyboard.keysPressed[key] = true
-
     if key == 'escape' then
         love.event.quit()
     end
+end
 
+function love.mousepressed(x, y, button)
+    love.mouse.bottonsPressed[button] = true
+end
+
+function love.mouse.wasPressed(button)
+    return love.mouse.bottonsPressed[button]
 end
 
 function love.keyboard.wasPressed(key)
@@ -120,6 +126,7 @@ function love.update(dt)
     gStateMachine:update(dt)
 
     love.keyboard.keysPressed = {}
+    love.mouse.bottonsPressed = {}
 end
 
 function love.draw()

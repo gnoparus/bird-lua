@@ -8,7 +8,7 @@ function PipePair:init(y)
     self.y = y
 
     self.pipes = {
-        ['upper'] = Pipe('top', self.y - PIPE_GAP_HEIGHT),
+        ['upper'] = Pipe('top', self.y - PIPE_GAP_HEIGHT + math.random(-2, 6)),
         ['lower'] = Pipe('bottom', self.y)
     }
 
